@@ -1,12 +1,27 @@
-import { configureStore } from "@reduxjs/toolkit";
-import noteSlice from "./features/noteSlice";
+import {configureStore} from '@reduxjs/toolkit';
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import {combineReducers} from "redux";
+import { persistReducer } from 'redux-persist';
+import thunk from 'redux-thunk';
 
-// configureStore创建一个redux数据
+import noteReducer from './features/noteSlice';
+
+const reducers = combineReducers({
+  note:noteReducer
+});
+
+const persistConfig = {
+    key: 'root',
+  storage: AsyncStorage,
+  whitelist: ['note']
+};
+
+const persistedReducer = persistReducer(persistConfig, reducers);
+
 const store = configureStore({
-  // 合并多个Slice
-  reducer: {
-    note: noteSlice
-  },
+    reducer: persistedReducer,
+    devTools: process.env.NODE_ENV !== 'production',
+    middleware: [thunk]
 });
 
 export default store;

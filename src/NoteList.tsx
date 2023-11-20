@@ -13,19 +13,11 @@ interface NoteListProps {
 
 const NoteList: React.FC<NoteListProps> = ({ navigation }) => {
     const [notes, setNotes] = useState<Note[]>([]);
-
-
-    const { noteArray } = useSelector((store: any) => store.note);
+    const {noteArray}  = useSelector((store: any) => store.note);
     const dispatch = useDispatch();
 
 
-
     useEffect(() => {
-        // Load notes from local storage on component mount
-        // You can use AsyncStorage or other local storage solutions
-        // For simplicity, using useState here
-        // You should replace this with AsyncStorage in a real app
-
         setNotes(noteArray);
     }, [noteArray]);
 
@@ -36,7 +28,7 @@ const NoteList: React.FC<NoteListProps> = ({ navigation }) => {
                     navigation.navigate('AddNote')
                 }} buttonStyle={styles.addButton} />
             </View>
-            {notes.length === 0 ? (
+            {notes?.length === 0 ? (
                 <Text>No notes available. Add some notes!</Text>
             ) : (
                 <FlatList
@@ -63,9 +55,6 @@ const NoteList: React.FC<NoteListProps> = ({ navigation }) => {
                                     color={'red'}
                                     onPress={() => {
                                         dispatch(deleteNote(item.id));
-                                        // const updatedNotes = notes.filter((note) => note.id !== item.id);
-                                        // setNotes(updatedNotes);
-
                                     }}
                                     containerStyle={styles.deleteButton}
                                 />
